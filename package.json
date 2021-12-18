@@ -1,0 +1,10 @@
+{
+  "name": "blockfish",
+  "version": "1.0.0",
+  "description": "blockfish monorepo",
+  "keywords": [
+    "bot"
+  ],
+  "author": "iitalics",
+  "license": "MIT"
+}
