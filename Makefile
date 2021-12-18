@@ -21,10 +21,10 @@ all:
 
 # meta target to set up dependencies
 setup:
-${BUILD}/.setup: # automatically run setup on first build
+${ROOT}/.did_setup: # automatically run setup on first build
 	make setup
 	@mkdir -p $(dir $@) && touch $@
-all: ${BUILD}/.setup
+all: ${ROOT}/.did_setup
 .PHONY: setup
 
 # meta target for the website

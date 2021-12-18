@@ -1,0 +1,90 @@
+@use "sass:color";
+@import "./geometry.scss";
+
+$bg: #060B0F;
+
+// surface
+$sf: #11212D;
+$sf-h: #162B3B;
+$sf-hh: #1C374A;
+$sf-hhh: #224159;
+$on-sf: #FFFFFF;
+
+// primary
+$pr: #5E50E2;
+$pr-d: #4E3EE0;
+$pr-dd: #3E2CDD;
+$on-pr: #FFFFFF;
+
+html {
+    font-family: sans-serif;
+}
+
+body {
+    background: $bg;
+}
+
+#root {
+    display: flex;
+}
+
+.sf {
+    background: $sf;
+    p, label { color: $on-sf; }
+}
+
+button {
+    border: none;
+    font-size: inherit;
+    &:active>span {
+        display: inline-block;
+        transform: translate(0, 1px);
+    }
+    &.icon {
+        font-family: FontAwesome;
+        width: 1.5em;
+        height: 1.5em;
+    }
+}
+
+.checkbox {
+    &.uc>button>span {
+        visibility: hidden;
+    }
+    &>span {
+        padding: 0.5em;
+        user-select: none;
+    }
+}
+
+button.pr, .checkbox.pr.ch>button {
+    background: $pr;
+    color: $on-pr;
+    &:hover {
+        background: $pr-d;
+    }
+    &:active {
+        background: $pr-dd;
+    }
+}
+
+.sf .checkbox.uc>button {
+    // TODO(iitalics): fix these colors
+    background: $sf-hhh;
+    &:hover {
+        background: color.adjust($sf-hhh, $blackness: 5%);
+    }
+    &:active {
+        background: color.adjust($sf-hhh, $blackness: 10%);
+    }
+}
+
+.sf .checkbox.uc>span {
+    // TODO(iitalics): fix this color
+    color: color.adjust($sf, $whiteness: 50%);
+}
+    
+
+button, label {
+    cursor: pointer;
+}

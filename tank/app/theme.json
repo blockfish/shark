@@ -1,0 +1,19 @@
+{
+  "blocks": {
+    "Z": "#cf202e",
+    "L": "#f78822",
+    "O": "#f6db35",
+    "S": "#6dc067",
+    "J": "#3c5aaa",
+    "I": "#41aabe",
+    "T": "#8f499c",
+    "G": "#686868",
+    "auto": "#cccccc"
+  },
+  "grid": {
+    "outer": ["#ffffff", 0.5, 1],
+    "inner": ["#ffffff", 0.125, 1]
+  },
+  "cursor": ["#ffffff", 1.0, 1, 3],
+  "ghost": [1.0, 2, 3]
+}

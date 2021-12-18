@@ -1,0 +1,60 @@
+body, div, p {
+    margin: 0;
+}
+
+canvas {
+    flex: 0;
+}
+
+.sm { font-size: 0.75rem; }
+.md { font-size: 1rem; }
+.lg { font-size: 1.5rem; }
+
+$u: 0.625rem;
+
+@for $i from 1 through 4 {
+    .hp#{$i} {
+        padding-left: $u * $i;
+        padding-right: $u * $i;
+    }
+    .hg#{$i} {
+        column-gap: $u * $i;
+    }
+    .hm#{$i} {
+        margin-left: $u * $i;
+        margin-right: $u * $i;
+    }
+    .vp#{$i} {
+        padding-top: $u * $i;
+        padding-bottom: $u * $i;
+    }
+    .vm#{$i} {
+        margin-top: $u * $i;
+        margin-bottom: $u * $i;
+    }
+    .vg#{$i} {
+        row-gap: $u * $i;
+    }
+}
+
+.hmc { margin-left: auto; margin-right: auto; }
+.vmc { margin-top: auto; margin-bottom: auto; }
+
+.flex {
+    display: flex;
+    &.v { flex-direction: column; }
+    &.align-start { align-items: flex-start; }
+}
+
+.grid {
+    display: grid;
+}
+
+@for $x from 1 through 2 {
+    @for $y from 1 through 2 {
+        .gi#{$x}-#{$y} {
+            grid-column: $x;
+            grid-row: $y;
+        }
+    }
+}

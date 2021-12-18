@@ -6,5 +6,8 @@
     "bot"
   ],
   "author": "iitalics",
-  "license": "MIT"
+  "license": "MIT",
+  "workspaces": [
+    "tank"
+  ]
 }

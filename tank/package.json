@@ -1,0 +1,10 @@
+{
+  "name": "@blockfish/tank",
+  "version": "0.0.1",
+  "description": "blockfish autoplay web client",
+  "author": "iitalics",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.13.15"
+  }
+}
