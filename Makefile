@@ -49,6 +49,7 @@ clean-dist:
 # includes
 ################################################################################
 
+include support/emscripten.mk
 include support/node.mk
 include support/http-server.mk
 

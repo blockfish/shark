@@ -4,3 +4,6 @@
 [submodule "support/third_party/json-maker"]
 	path = support/third_party/json-maker
 	url = git@github.com:blockfish/json-maker.git
+[submodule "support/third_party/emsdk"]
+	path = support/third_party/emsdk
+	url = git@github.com:emscripten-core/emsdk.git
