@@ -13,23 +13,18 @@ inline void fmt_1(fmt_buf* dst, char what) { dst->push_back(what); }
 inline void fmt_1(fmt_buf* dst, const char* what) { dst->append(what); }
 inline void fmt_1(fmt_buf* dst, char* what) { dst->append(what); }
 
-#define BF__IMPL_INTEGER_FMT(_Type, _len, _spec)    \
-    inline void fmt_1(fmt_buf* dst, _Type what)     \
-    {                                               \
-        char tmp[_len];                             \
-        sprintf(tmp, "%" _spec, what);              \
-        dst->append(tmp);                           \
-    }
-
-BF__IMPL_INTEGER_FMT(int16_t,  8,  PRId16)
-BF__IMPL_INTEGER_FMT(uint16_t, 8,  PRIu16)
-BF__IMPL_INTEGER_FMT(int32_t,  16, PRId32)
-BF__IMPL_INTEGER_FMT(uint32_t, 16, PRIu32)
-BF__IMPL_INTEGER_FMT(int64_t,  32, PRId64)
-BF__IMPL_INTEGER_FMT(uint64_t, 32, PRIu64)
+template <typename T>
+typename std::enable_if<std::is_integral<T>::value>::type
+fmt_1(fmt_buf* dst, const T& what)
+{
+    char tmp[64];
+    sprintf(tmp, "%" PRId64, int64_t(what));
+    dst->append(tmp);
+}
 
 template <typename T>
-inline void fmt_1(fmt_buf* dst, const T& what)
+typename std::enable_if<!std::is_integral<T>::value>::type
+fmt_1(fmt_buf* dst, const T& what)
 {
     what.fmt(dst);
 }
