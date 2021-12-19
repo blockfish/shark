@@ -1,3 +1,3 @@
-LibraryManager.library['RTS_send'] = function(p, l) { return RTS.send(p, l); };
-LibraryManager.library['RTS_recv'] = function(p) { return RTS.recv(p); };
-
+LibraryManager.library['RTS_send'] = function(ptr, len) { return RTS.send(ptr, len); };
+LibraryManager.library['RTS_recv'] = function(ptr) { return RTS.recv(p); };
+LibraryManager.library['RTS_log'] = function(lvl, sys, msg) { return RTS.log(lvl, sys, msg); };

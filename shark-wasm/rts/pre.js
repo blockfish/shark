@@ -6,6 +6,18 @@ let RTS = {
     _recvBuf: [],
     _parked: false,
 
+    log(lvl, sys, msg) {
+        let getStr = (ptr) => {
+            let heap = Module['HEAPU8'];
+            let end = ptr;
+            while (heap[end] != 0) end++;
+            return this._textDec.decode(heap.subarray(ptr, end));
+        };
+        let prefix = ['ERR', 'WARN', 'INFO', 'DEBUG', 'TRACE'][lvl - 1];
+        let method = ['error', 'warn', 'log', 'log', 'log'][lvl - 1];
+        console[method](`${prefix} [bf::${getStr(sys)}] ${getStr(msg)}`);
+    },
+
     send(ptr, len) {
         let inp = Module['HEAPU8'].subarray(ptr, ptr + len);
         try {
@@ -51,6 +63,7 @@ let RTS = {
             break;
 
         default: // error
+            self['close']();
             throw new Error('wasm event loop error');
         }
     },

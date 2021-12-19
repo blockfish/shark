@@ -6,6 +6,11 @@ cpp_args = ['-fno-exceptions']
 link_args = ['-fno-exceptions']
 link_deps = []
 
+shark = subproject('shark')
+deps += shark.get_variable('dep')
+
+subdir('rts')
+
 link_args += [
   '-s', 'ENVIRONMENT=worker',
   '-s', 'STANDALONE_WASM',
@@ -13,8 +18,6 @@ link_args += [
   '-s', 'ASSERTIONS=0',
   '--no-entry',
 ]
-
-subdir('rts')
 
 executable(
   'webworker',
