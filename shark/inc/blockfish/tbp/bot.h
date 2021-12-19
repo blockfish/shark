@@ -15,7 +15,7 @@ namespace blockfish {
 namespace tbp {
 
 class io;
-class tx_msg;
+struct tx_msg;
 
 class bot {
  public:
