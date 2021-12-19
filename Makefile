@@ -32,6 +32,11 @@ www:
 all: www
 .PHONY: www
 
+# meta target for command line tools
+cli:
+all: cli
+.PHONY: cli
+
 # meta target to clean everything built
 clean: clean-build clean-dist
 clean-build:
@@ -47,4 +52,5 @@ clean-dist:
 include support/node.mk
 include support/http-server.mk
 
+include shark/shark.mk
 include tank/tank.mk
