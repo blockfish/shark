@@ -52,5 +52,5 @@ clean-dist:
 include support/node.mk
 include support/http-server.mk
 
-include shark/shark.mk
+include shark-cli/shark-cli.mk
 include tank/tank.mk

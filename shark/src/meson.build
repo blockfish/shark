@@ -21,6 +21,3 @@ srcs += custom_target(
     '@OUTPUT@',
   ]
 )
-
-srcs += files('main_tbp.cc')
-deps += dependency('boost')

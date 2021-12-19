@@ -1,17 +1,10 @@
-project(
-  'blockfish-shark',
-  ['cpp'],
-  version : '0.1.0',
-  default_options : ['cpp_std=c++17'],
-)
+project('shark', ['cpp'], version : '0.1.0')
 
-ruleset_json = get_option('blockfish_ruleset_json')
+ruleset_json = get_option('ruleset_json')
 
 srcs = []
 hdrs = []
 incs = []
-cpp_args = []
-link_args = []
 deps = []
 
 tiny_json = subproject('tiny-json')
@@ -25,11 +18,13 @@ python = find_program('python3')
 subdir('src')
 subdir('inc')
 
-executable(
-  'cli',
+lib = static_library(
+  'blockfish',
   srcs + hdrs,
-  cpp_args : cpp_args,
   include_directories : incs,
-  link_args : link_args,
   dependencies : deps)
+
+dep = declare_dependency(
+  link_with : lib,
+  include_directories : incs)
   

@@ -2,3 +2,7 @@ build
 dist
 node_modules
 .did_setup
+
+# clang lsp
+.cache
+compile_commands.json

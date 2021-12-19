@@ -1,1 +1,1 @@
-option('blockfish_ruleset_json', type : 'string')
+option('ruleset_json', type : 'string')
