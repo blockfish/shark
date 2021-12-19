@@ -1,0 +1,6 @@
+[submodule "support/third_party/tiny-json"]
+	path = support/third_party/tiny-json
+	url = git@github.com:blockfish/tiny-json.git
+[submodule "support/third_party/json-maker"]
+	path = support/third_party/json-maker
+	url = git@github.com:blockfish/json-maker.git
