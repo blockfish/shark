@@ -23,18 +23,18 @@ const int bf::logging::log_level = INFO;
 
 namespace {
 
-class tbp_io : public bf::tbp::io {
+class tbp_asio : public bf::tbp::io {
  public:
-    BF_DISALLOW_IMPLICIT_COPY(tbp_io);
-    BF_DISALLOW_MOVE(tbp_io);
+    BF_DISALLOW_IMPLICIT_COPY(tbp_asio);
+    BF_DISALLOW_MOVE(tbp_asio);
 
-    tbp_io(asio::io_context* ctx)
+    tbp_asio(asio::io_context* ctx)
         : exec_(ctx->get_executor())
         , stdin_(*ctx)
         , stdout_(*ctx)
     {}
 
-    virtual ~tbp_io() {}
+    virtual ~tbp_asio() {}
 
     virtual void send(const bf::tbp::tx_msg& msg)
     {
@@ -170,7 +170,7 @@ int main(int argc, char** argv)
 {
     asio::io_context io_ctx;
 
-    tbp_io io(&io_ctx);
+    tbp_asio io(&io_ctx);
     BF_LOG_INFO("Initialized I/O");
 
     bf::tbp::bot bot;
