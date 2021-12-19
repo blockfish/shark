@@ -54,4 +54,5 @@ include support/node.mk
 include support/http-server.mk
 
 include shark-cli/shark-cli.mk
+include shark-wasm/shark-wasm.mk
 include tank/tank.mk
