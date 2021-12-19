@@ -1,0 +1,1 @@
+option('blockfish_ruleset_json', type : 'string')
