@@ -78,7 +78,6 @@ struct leftpad_t {
     {
         size_t idx = dst->size();
         size_t tgt = idx + len;
-        dst->reserve();
         fmt_1(dst, what);
         if (dst->size() < tgt) {
             dst->insert(idx, tgt - dst->size(), ' ');
