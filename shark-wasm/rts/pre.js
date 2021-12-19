@@ -7,8 +7,8 @@ let RTS = {
     _parked: false,
 
     log(lvl, sys, msg) {
+        let heap = Module['HEAPU8'];
         let getStr = (ptr) => {
-            let heap = Module['HEAPU8'];
             let end = ptr;
             while (heap[end] != 0) end++;
             return this._textDec.decode(heap.subarray(ptr, end));
