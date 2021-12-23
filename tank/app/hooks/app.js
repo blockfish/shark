@@ -19,7 +19,7 @@ function init() {
         },
         palette: {
             selected: 'G',
-            fillRow: false,
+            fillRow: true,
         },
         autoplay: {
             playing: false,

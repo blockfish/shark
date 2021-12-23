@@ -17,6 +17,7 @@ let Main = () => {
             <Board
                 board={board}
                 edit={edit}
+                bot={bot}
                 dispatch={dispatch} />
             <BottomBar
                 autoplay={autoplay}

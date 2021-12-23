@@ -28,7 +28,7 @@ enum RTS_poll {
 
 /* I/O, event loop */
 
-const int bf::logging::log_level = DEBUG;
+const int bf::logging::log_level = WARN;
 const bf::logging::printer_t bf::logging::log_printer = RTS_log;
 
 namespace {
@@ -57,6 +57,7 @@ class tbp_ww : public blockfish::tbp::io {
         RTS_recv(recv_.data());
         if (!bf::tbp::from_json_str(recv_, msg, &recv_err_)) {
             BF_LOG_ERR("error parsing message: {}", recv_err_.c_str());
+            msg->clear();
         }
         recv_.clear();
         recv_err_.clear();
