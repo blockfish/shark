@@ -21,8 +21,8 @@ struct move;
 class moves;
 }
 namespace queue {
-class position;
 class queue;
+struct position;
 }
 namespace think {
 struct statistics;
@@ -57,7 +57,7 @@ inline void util::fmt_1<piece_type>(util::fmt_buf* dst, const piece_type& ty)
 class opt_piece_type {
  public:
     inline opt_piece_type(piece_type x) : val_(static_cast<int8_t>(x)) {}
-    inline opt_piece_type(std::nullopt_t null = std::nullopt) : val_(0) {}
+    inline opt_piece_type(std::nullopt_t = std::nullopt) : val_(0) {}
 
     // ASSUMPTION: not null
     inline piece_type operator*() const { return (piece_type) val_; } 

@@ -4,10 +4,10 @@
 #include <memory>
 #include <unordered_set>
 #include <vector>
+#include <span>
 
 #include "blockfish/common.h"
 #include "blockfish/util/fmt.h"
-#include "blockfish/util/iter.h"
 #include "blockfish/util/macros.h"
 
 namespace blockfish {
@@ -19,8 +19,6 @@ enum class input : uint8_t {
     CCW,
     CW,
 };
-
-BF_DEFINE_RANGE_ITERATOR(every_input, input, uint8_t, LEFT, CW);
 
 struct kick {
     dim x_ofs;
@@ -55,7 +53,7 @@ class ruleset {
         return cells_[idx];
     }
 
-    using kicks_list = util::iterator_range<const kick*>;
+    using kicks_list = std::span<const kick>;
 
     inline kicks_list kicks(piece_type type, dim r0, dim r1) const
     {

@@ -10,7 +10,6 @@
 #include "blockfish/move.h"
 #include "blockfish/queue.h"
 #include "blockfish/think.h"
-#include "blockfish/util/iter.h"
 
 namespace blockfish {
 namespace tbp {
@@ -78,12 +77,10 @@ struct tx_msg {
     };
 
     struct info_data {
-        using features_list = util::iterator_range<const std::string*>;
-
         std::string name;
         std::string version;
         std::string author;
-        features_list features;
+        std::span<const std::string> features;
     };
 
     struct suggestion_data {

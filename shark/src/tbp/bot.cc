@@ -26,7 +26,7 @@ bot::bot()
             // TODO(iitalics): VERSION file
             .version = "0.10.1",
             .author = "iitalics",
-            .features = tx_msg::info_data::features_list(&features[0], &features[2]),
+            .features = features,
         });
 }
 
@@ -154,7 +154,7 @@ void bot::play_(const move::move& move)
     // XXX(iitalics): if running, thinker_ holds a reference to queue, which gets
     // invalidated by modifying the queue. so it MUST be reset.
     thinker_ = nullptr;
-    queue_.pop(move.piece.type);
+    queue_.play(move.piece.type);
     move.loc.place(&matrix_);
     (void) matrix_.filter();
 }

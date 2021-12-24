@@ -2,9 +2,9 @@
 #pragma once
 
 #include <vector>
+#include <span>
 
 #include "blockfish/common.h"
-#include "blockfish/util/iter.h"
 #include "blockfish/util/macros.h"
 
 namespace blockfish {
@@ -22,64 +22,47 @@ class queue {
     void copy(const queue& other);
     void fmt(util::fmt_buf* dst) const;
 
-    inline void set_hold(opt_piece_type ty) { hold_ = ty; }
-    inline void push_back(piece_type ty) { next_.push_back(ty); }
-    void pop(piece_type ty);
     position pos() const;
 
+    // WARNING: calling these functions may be subject to iterator-invalidation style bugs
+    // if the `position` from a previous call to `pos()` is still in scope.
+    void set_hold(opt_piece_type ty);
+    void push_back(piece_type ty);
+    void play(piece_type ty);
+
  private:
-    std::vector<piece_type> next_;
-    opt_piece_type hold_;
+    std::vector<piece_type> queue_;
+    bool did_hold_;
 };
+
+using pieces = std::span<const piece_type>;
 
 /**
  * Represents a position in a `queue`, reachable by placing pieces or swapping the hold
  * slot.
  */
-// WARNING: using `position` is subject to iterator-invalidation bugs if you push to a
-// queue while you have any old Pos values in scope.
-class position {
- public:
-    position();
+struct position {
+    pieces next = {};
+
+    // Store an extra slot which may contain the hold piece or the current piece. This
+    // representation allows us to make basic queue modification wrt. the hold piece,
+    // without actually changing the underlying array.
+    // INVARIANT: if next isn't empty then slot isn't empty either.
+    opt_piece_type slot = std::nullopt;
+
+    // If true, then the hold piece is located in the slot and the current piece is at the
+    // front of `next`. Otherwise, they are swapped. Also note that two queues are
+    // "equivalent" (provide access to the same pieces) irrespective of this flag.
+    bool slot_is_hold = false;
 
     void fmt(util::fmt_buf* dst) const;
 
-    inline bool empty() const
-    { return !slot_ && next_ == end_; }
-
-    inline size_t size() const
-    { return (end_ - next_) + (slot_ ? 1 : 0); }
-
-    inline opt_piece_type hold() const
-    { return hold_ ? slot_  : top_(); }
-
-    inline opt_piece_type current() const
-    { return hold_ ? top_() : slot_; }
-
-    using piece_type_list = util::iterator_range<const piece_type*>;
-
-    inline piece_type_list next() const
-    { return piece_type_list(std::min(next_ + 1, end_), end_); }
-
-    void pop();
-
-    // ASSUMPTION: hold() == ty || current() == ty
-    inline void pop(piece_type ty)
-    {
-        if (!(current() && *current() == ty)) {
-            hold_ = !hold_;
-        }
-        pop();
-    }
-
- private:
-    friend class queue;
-    const piece_type* next_;
-    const piece_type* end_;
-    opt_piece_type slot_;
-    bool hold_;
-
-    opt_piece_type top_() const;
+    inline opt_piece_type hold() const { return slot_is_hold ? slot : front(); }
+    inline opt_piece_type current() const { return slot_is_hold ? front() : slot; }
+    inline opt_piece_type front() const { return next.empty() ? opt_piece_type() : next[0]; }
+    inline bool empty() const { return !slot && next.empty(); }
+    inline size_t size() const { return slot ? (next.size() + 1) : 0; }
+    void play(piece_type ty);
 };
 
 }   // queue

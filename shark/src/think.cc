@@ -122,7 +122,7 @@ void engine::expand_()
 
         // compute new queue
         succ->queue = current_->queue;
-        succ->queue.pop(move->piece.type);
+        succ->queue.play(move->piece.type);
 
         // compute new rating
         if (filtered.lowest_y == 0) {

@@ -220,8 +220,9 @@ std::optional<move> moves::next()
         stack_.pop_back();
 
         // TODO(iitalics): config input capabilities (particularly, 180)
+        const auto all_inputs = { input::LEFT, input::RIGHT, input::CCW, input::CW };
 
-        for (auto input : every_input()) {
+        for (auto input : all_inputs) {
             if (auto succ = apply_input(rules_, *matrix_, piece, input)) {
                 // if input is valid, push result of that input
                 if (push_piece_(succ->piece)) {

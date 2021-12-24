@@ -12,6 +12,5 @@ hdrs += files(
   'think.h',
   'util/bump.h',
   'util/fmt.h',
-  'util/iter.h',
   'util/macros.h',
 )

@@ -14,8 +14,7 @@ void fmt_queue(
     const char* tag,
     opt_piece_type hold,
     opt_piece_type current,
-    const piece_type* next_begin,
-    const piece_type* next_end)
+    pieces next)
 {
     util::format(dst, "{}{", tag);
     const char* sep = "";
@@ -28,8 +27,8 @@ void fmt_queue(
         sep = ",";
     }
     util::format(dst, "{}next=[", sep);
-    for (auto it = next_begin; it != next_end; ++it) {
-        util::format(dst, "{}", *it);
+    for (auto c : next) {
+        util::format(dst, "{}", c);
     }
     util::format(dst, "]}");
 }
@@ -39,104 +38,102 @@ void fmt_queue(
 /* queue */
 
 queue::queue()
+    : did_hold_(false)
 {
-    next_.reserve(8);
+    queue_.reserve(16);
 }
 
 void queue::copy(const queue& other)
 {
     if (this != &other) {
-        next_ = other.next_;
-        hold_ = other.hold_;
+        queue_ = other.queue_;
+        did_hold_ = other.did_hold_;
     }
 }
 
 void queue::fmt(util::fmt_buf* dst) const
 {
-    fmt_queue(
-        dst,
-        "queue",
-        hold_,
-        next_.empty() ? std::nullopt : opt_piece_type(next_[0]),
-        &next_[1],
-        &next_[next_.size()]);
-}
-
-void queue::pop(piece_type ty)
-{
-    if (!next_.empty() && ty == next_[0]) {
-        next_.erase(next_.begin());
-    } else if (hold_ && ty == *hold_) {
-        if (next_.empty()) {
-            hold_.clear();
-        } else {
-            hold_ = next_[0];
-            next_.erase(next_.begin());
+    opt_piece_type hold, current;
+    size_t off = 0;
+    if (queue_.size() > 1) {
+        if (did_hold_) {
+            hold = queue_[did_hold_ ? 0 : 1];
+            off++;
         }
-    } else if (!hold_ && next_.size() >= 2 && ty == next_[1]) {
-        hold_ = next_[0];
-        next_.erase(next_.begin());
-        next_.erase(next_.begin());
-    } else {
-        BF_LOG_WARN("piece type {} not reachable from queue: {}", ty, *this);
+        current = queue_[did_hold_ ? 1 : 0];
+        off++;
+    } else if (queue_.size() == 1) {
+        (did_hold_ ? hold : current) = queue_[0];
+        off++;
     }
+    fmt_queue(dst, "queue", hold, current, pieces(queue_).subspan(off));
 }
 
 position queue::pos() const
 {
     position pos;
-    pos.next_ = &next_[0];
-    pos.end_ = &next_[next_.size()];
-    if (hold_) {
-        pos.slot_ = *hold_;
-        pos.hold_ = true;
-    } else {
-        pos.slot_ = pos.next_[0];
-        pos.next_++;
+    if (!queue_.empty()) {
+        pos.next = pieces(queue_).subspan(1);
+        pos.slot = queue_[0];
+        pos.slot_is_hold = did_hold_;
     }
     return pos;
 }
 
-/* position */
-
-position::position()
-    : next_(nullptr)
-    , end_(nullptr)
-    , hold_(false)
-{}
-
-void position::fmt(util::fmt_buf* dst) const
+void queue::set_hold(opt_piece_type ty)
 {
-    fmt_queue(
-        dst,
-        "position",
-        hold(),
-        current(),
-        next().begin(),
-        next().end());
-}
-
-void position::pop()
-{
-    if (next_ == end_) {
-        if (!hold_) {
-            slot_.clear();
-        }
-    } else {
-        if (!hold_) {
-            slot_ = *next_;
-            hold_ = true;
-        }
-        ++next_;
+    if (ty && did_hold_) {
+        queue_[0] = *ty;
+    } else if (ty && !did_hold_) {
+        queue_.insert(queue_.begin(), *ty);
+        did_hold_ = true;
+    } else if (!ty && did_hold_) {
+        queue_.erase(queue_.begin());
+        did_hold_ = false;
     }
 }
 
-opt_piece_type position::top_() const
+void queue::push_back(piece_type ty)
 {
-    if (next_ < end_) {
-        return *next_;
+    queue_.push_back(ty);
+}
+
+void queue::play(piece_type ty)
+{
+    BF_ASSERT(!queue_.empty());
+    if (queue_.size() > 1 && queue_[0] != ty) {
+        std::swap(queue_[0], queue_[1]);
+        did_hold_ = true;
+    }
+    BF_ASSERT(queue_[0] == ty);
+    queue_.erase(queue_.begin());
+    did_hold_ &= !queue_.empty();
+}
+
+/* position */
+
+void position::fmt(util::fmt_buf* dst) const
+{
+    fmt_queue(dst, "position", hold(), current(), next.subspan(next.empty() ? 0 : 1));
+}
+
+void position::play(piece_type ty)
+{
+    BF_ASSERT(slot); // size() >= 1
+    if (next.empty()) {
+        BF_ASSERT(*slot == ty);
+        slot.clear();
     } else {
-        return std::nullopt;
+        if (*slot == ty) {
+            slot = next[0];
+        } else {
+            BF_ASSERT(next[0] == ty);
+        }
+        next = next.subspan(1);
+        // XXX(iitalics): not sure how to justify this other than the fact that i wrote
+        // out a decision tree for this flag after each possiblity of slot==ty and
+        // slot_is_hold and it always ends up true after the operation.
+        slot_is_hold = true;
     }
 }
 
