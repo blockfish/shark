@@ -1,8 +1,3 @@
-MESON ?= meson
-NINJA ?= ninja
-
-SRS_JSON ?= ${ROOT}/support/srs.json
-
 SHARK_CLI = ${ROOT}/shark-cli
 SHARK_CLI_BUILDDIR = ${BUILD}/shark-cli
 

@@ -11,6 +11,8 @@ DIST ?= ${ROOT}/dist
 # website outputs
 WWW = ${DIST}/www
 
+SRS_JSON = ${ROOT}/support/srs.json
+
 ################################################################################
 # meta-targets
 ################################################################################
@@ -54,8 +56,9 @@ clean-dist:
 ################################################################################
 
 include support/emscripten.mk
-include support/node.mk
 include support/http-server.mk
+include support/meson.mk
+include support/node.mk
 
 include shark-cli/shark-cli.mk
 include shark-wasm/shark-wasm.mk

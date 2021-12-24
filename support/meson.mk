@@ -1,0 +1,2 @@
+MESON ?= meson
+NINJA ?= ninja

@@ -1,8 +1,3 @@
-MESON ?= meson
-NINJA ?= ninja
-
-SRS_JSON ?= ${ROOT}/support/srs.json
-
 SHARK_WASM = ${ROOT}/shark-wasm
 SHARK_WASM_BUILDDIR = ${BUILD}/shark-wasm
 
