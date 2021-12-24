@@ -37,6 +37,10 @@ cli:
 all: cli
 .PHONY: cli
 
+# meta target for tests
+test:
+.PHONY: test
+
 # meta target to clean everything built
 clean: clean-build clean-dist
 clean-build:
@@ -55,4 +59,5 @@ include support/http-server.mk
 
 include shark-cli/shark-cli.mk
 include shark-wasm/shark-wasm.mk
+include shark/shark.mk
 include tank/tank.mk

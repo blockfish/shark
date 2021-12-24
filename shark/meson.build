@@ -1,6 +1,7 @@
 project('shark', ['cpp'], version : '0.1.0')
 
 ruleset_json = get_option('ruleset_json')
+compile_tests = get_option('compile_tests')
 
 srcs = []
 hdrs = []
@@ -27,4 +28,8 @@ lib = static_library(
 dep = declare_dependency(
   link_with : lib,
   include_directories : incs)
-  
+
+if compile_tests
+  test_srcs = files('test.cc')
+  executable('run-tests', test_srcs, dependencies : dep)
+endif

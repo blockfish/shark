@@ -1,5 +1,5 @@
 // 2021 iitalics
-#define BF_LOG_NS "main(tbp)"
+#define BF_LOG_NS "main(cli)"
 
 #include <cstdio>
 #include <memory>
@@ -150,7 +150,7 @@ class tbp_asio : public bf::tbp::io {
             });
     }
 };
-    
+
 }   // namespace
 
 static void bf_log_printer_stderr(int level, const char* sys, const char* msg)

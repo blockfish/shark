@@ -1,1 +1,2 @@
 option('ruleset_json', type : 'string')
+option('compile_tests', type : 'boolean', value : false)
