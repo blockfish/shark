@@ -1,12 +1,17 @@
 const rules = require('./rules');
 const { Matrix } = require('./matrix');
-const { useKeyEvents } = require('./hooks/keys');
+
 const { SideBar } = require('./components/side');
 const { Board } = require('./components/board');
 const { BottomBar } = require('./components/bottom');
+
+const { useKeyEvents } = require('./hooks/keys');
+const { useBotWebWorker } = require('./hooks/bot');
+
 const Palette = require('./reducers/palette');
 const Edit = require('./reducers/edit');
 const Play = require('./reducers/play');
+const Bot = require('./reducers/bot');
 
 function initBoard() {
     let playfield = Matrix.EMPTY;
@@ -25,7 +30,7 @@ function init() {
     let palette = Palette.INITIAL;
     let edit = Edit.INITIAL;
     let play = Play.INITIAL;
-    let bot = {status: 'disabled', move: null};
+    let bot = Bot.INITIAL;
     return {board, palette, edit, play, bot};
 }
 
@@ -34,6 +39,7 @@ function reducer(state, action) {
     palette = Palette.reducer(palette, action);
     [edit, board] = Edit.reducer(edit, board, palette, action);
     play = Play.reducer(play, action);
+    bot = Bot.reducer(bot, action);
     return {board, palette, edit, play, bot};
 }
 
@@ -52,6 +58,9 @@ let Main = () => {
         onToggleGarbage,
         onToggleAuto,
         onStep,
+        onBotError,
+        onBotCalculating,
+        onBotSuggestion,
     ] = React.useMemo(() => [
         Edit.enterPiece(dispatch),
         Edit.cancel(dispatch),
@@ -64,11 +73,13 @@ let Main = () => {
         Play.toggleGarbage(dispatch),
         Play.toggleAuto(dispatch),
         Play.step(dispatch),
+        Bot.error(dispatch),
+        Bot.calculating(dispatch),
+        Bot.suggestion(dispatch),
     ], [dispatch]);
 
-    // FIXME(iitalics): useBot
-
     useKeyEvents(window, onEnterPiece, onCancel, onOtherKey);
+    useBotWebWorker(state.board, state.edit, onBotError, onBotCalculating, onBotSuggestion);
 
     return (
         <main className="grid hmc vm4">
