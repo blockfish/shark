@@ -1,6 +1,6 @@
 TANK = ${ROOT}/tank
 
-TANK_SASS = sass
+TANK_SASS = ${NPX} sass
 TANK_SASS_ARGS = --no-error-css
 
 TANK_ESBUILD = ${NPX} esbuild
