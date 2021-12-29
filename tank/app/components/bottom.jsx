@@ -1,11 +1,8 @@
 const { CheckBox, IconButton } = require('../components/basic-widgets');
 
-let BottomBar = ({ autoplay, bot, dispatch }) => {
-    let toggleGarbage = React.useCallback(() => dispatch({type: 'play:toggle-garbage'}), [dispatch]);
-    let togglePlay = React.useCallback(() => dispatch({type: 'play:toggle-play'}), [dispatch]);
-    let stepForward = React.useCallback(() => dispatch({type: 'play:step-forward'}), [dispatch]);
-    let undo = React.useCallback(() => dispatch({type: 'undo'}), [dispatch]);
-    let redo = React.useCallback(() => dispatch({type: 'redo'}), [dispatch]);
+let BottomBar = ({ play, bot, onToggleGarbage, onToggleAuto, onStep }) => {
+    let undo = () => console.log('undo not implemented');
+    let redo = () => console.log('redo not implemented');
     return (
         <div className="gi2-2 flex h hp2 hg2 sf">
             <div className="flex h hg1 vm2">
@@ -13,11 +10,11 @@ let BottomBar = ({ autoplay, bot, dispatch }) => {
                 <IconButton style="pr" size="lg" icon="redo" onClick={redo} />
             </div>
             <div className="flex h hg1 vm2">
-                <IconButton style="pr" size="lg" icon={autoplay.playing ? "pause" : "play"} onClick={togglePlay} />
-                <IconButton style="pr" size="lg" icon="forward" onClick={stepForward} />
+                <IconButton style="pr" size="lg" icon={play.auto ? "pause" : "play"} onClick={onToggleAuto} />
+                <IconButton style="pr" size="lg" icon="forward" onClick={onStep} />
             </div>
             <div className="vmc">
-                <CheckBox style="pr" size="md" checked={autoplay.garbage} onToggle={toggleGarbage}>
+                <CheckBox style="pr" size="md" checked={play.garbage} onToggle={onToggleGarbage}>
                     Add garbage automatically
                 </CheckBox>
             </div>

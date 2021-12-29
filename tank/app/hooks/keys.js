@@ -1,4 +1,4 @@
-function buildKeyMap() {
+function buildKeyMap(onEnterPiece, onCancel) {
     let keyMap = new Map();
     for (let [key, piece] of [
         ['KeyI', 'I'],
@@ -9,30 +9,25 @@ function buildKeyMap() {
         ['KeyT', 'T'],
         ['KeyZ', 'Z'],
     ]) {
-        keyMap.set(key, { type: 'edit:enter-piece', piece });
+        keyMap.set(key, () => onEnterPiece(piece));
     }
-    keyMap.set('Escape', { type: 'edit:cancel' });
+    keyMap.set('Escape', onCancel);
     return keyMap;
 }
 
-function useKeyEvents(container, dispatch) {
-    let keyMapRef = React.useRef();
-    let keyMap = (keyMapRef.current ||= buildKeyMap());
-
+function useKeyEvents(container, onEnterPiece, onCancel, onOtherKey) {
+    let keyMap = React.useMemo(() => buildKeyMap(onEnterPiece, onCancel), [onEnterPiece, onCancel]);
     React.useEffect(() => {
         function onKeyEvent(event) {
-            dispatch(
-                keyMap.has(event.code)
-                    ? keyMap.get(event.code)
-                    : { type: 'other-key', code: event.code }
-            );
+            keyMap.has(event.code)
+                ? keyMap.get(event.code)()
+                : onOtherKey(event.code)
         }
-
         container.addEventListener('keydown', onKeyEvent);
         return () => {
             container.removeEventListener('keydown', onKeyEvent);
         };
-    }, [container, dispatch]);
+    }, [container, keyMap, onOtherKey]);
 }
 
 module.exports = { useKeyEvents };

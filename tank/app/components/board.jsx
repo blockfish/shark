@@ -4,7 +4,7 @@ const { PlayfieldView } = require('../views/playfield');
 const theme = require('../theme');
 const rules = require('../rules');
 
-let Board = ({ board, edit, bot, dispatch }) => {
+let Board = ({ board, edit, bot, onClickHold, onClickQueue, onDrag }) => {
     let viewsRef = React.useRef();
     let views = (viewsRef.current ||= {
         hold: new QueueView(1),
@@ -23,12 +23,12 @@ let Board = ({ board, edit, bot, dispatch }) => {
         displayPlayfield = edit.playfield;
         isEditing = true;
         break;
-    case 'enter-hold':
+    case 'hold':
         displayHold = edit.hold;
         editingHold = 0;
         isEditing = true;
         break;
-    case 'enter-queue':
+    case 'queue':
         displayQueue = edit.queue;
         editingQueue = edit.queue.length;
         isEditing = true;
@@ -41,7 +41,7 @@ let Board = ({ board, edit, bot, dispatch }) => {
         } else {
             return [];
         }
-    }, [bot, bot.move]);
+    }, [bot.move]);
 
     React.useEffect(() => {
         views.hold.setPiece(0, displayHold);
@@ -52,15 +52,14 @@ let Board = ({ board, edit, bot, dispatch }) => {
         views.queue.setEditing(editingQueue);
     }, [editingHold, editingQueue, displayHold, displayQueue]);
 
-    views.hold.onClick = () => dispatch({ type: 'edit:click-hold' });
-    views.queue.onClick = () => dispatch({ type: 'edit:click-queue' });
-
     React.useEffect(() => {
         views.playfield.setCells(displayPlayfield.getFilledCells());
         views.playfield.setGhost(displayGhostCells);
     }, [displayPlayfield, displayGhostCells]);
 
-    views.playfield.onDragCursor = (dragType, x, y) => dispatch({ type: `edit:drag:${dragType}`, x, y });
+    views.hold.onClick = onClickHold;
+    views.queue.onClick = onClickQueue;
+    views.playfield.onDragCursor = onDrag;
 
     return (
         <div className="gi2-1 flex h align-start hm3 vm3 hg2">

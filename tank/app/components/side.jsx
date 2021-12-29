@@ -43,30 +43,31 @@ let ColorPalette = ({ layout, selected, onSelect }) => {
     );
 };
 
-let SideBar = ({ palette, dispatch }) => {
-    let selectType = React.useCallback(select => dispatch({type: 'palette:select-type', select}), [dispatch]);
-    let toggleFillRow = React.useCallback(() => dispatch({type: 'palette:toggle-fill-row'}), [dispatch]);
+let SideBar = ({ palette, onSelectType, onToggleFillRow }) => {
     return (
         <div className="gi1-1 flex v vp2 vg2 sf">
             <div className="hm2">
-                <ColorPalette
-                    layout={[
-                        ["Z", "J"],
-                        ["L", "I"],
-                        ["O", "T"],
-                        ["S", "G"],
-                        ["auto"],
-                    ]}
-                    selected={palette.selected}
-                    onSelect={selectType} />
+                <ColorPalette layout={LAYOUT}
+                              selected={palette.selected}
+                              onSelect={onSelectType} />
             </div>
             <div className="flex v vg1 hm1">
-                <CheckBox style="pr" size="md" checked={palette.fillRow} onToggle={toggleFillRow}>
+                <CheckBox style="pr" size="md"
+                          checked={palette.fillRow}
+                          onToggle={onToggleFillRow}>
                     Fill row
                 </CheckBox>
             </div>
         </div>
     );
 };
+
+const LAYOUT = [
+    ["Z", "J"],
+    ["L", "I"],
+    ["O", "T"],
+    ["S", "G"],
+    ["auto"],
+];
 
 module.exports = { SideBar };
