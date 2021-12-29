@@ -80,6 +80,10 @@ std::optional<move::move> engine::best_move() const
 
 void engine::think(size_t times)
 {
+    if (current_beam_width_ >= 256) {
+        return;
+    }
+
     for (size_t i = 0; i < times; ++i) {
         stats_.iterations++;
 
@@ -97,13 +101,9 @@ void engine::restart_()
 
     beam_from_.push_back(root_);
 
-    // FIXME(iitalics): hmmm
-    if (current_beam_width_ < 1000000) { 
-        current_beam_width_ *= 2;
-        BF_LOG_DEBUG("new beam width: {}", current_beam_width_);
-
-        stats_.beam_width = current_beam_width_;
-    }
+    current_beam_width_ *= 2;
+    stats_.beam_width = current_beam_width_;
+    BF_LOG_DEBUG("new beam width: {}", current_beam_width_);
 }
 
 void engine::expand_()
